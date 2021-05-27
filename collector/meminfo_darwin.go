@@ -60,14 +60,18 @@ func (c *meminfoCollector) getMemInfo() (map[string]float64, error) {
 
 	ps := float64(pageSize)
 	return map[string]float64{
-		"active_bytes":            ps * float64(vmstat.active_count),
-		"compressed_bytes":        ps * float64(vmstat.compressor_page_count),
-		"inactive_bytes":          ps * float64(vmstat.inactive_count),
-		"wired_bytes":             ps * float64(vmstat.wire_count),
-		"free_bytes":              ps * float64(vmstat.free_count),
-		"swapped_in_bytes_total":  ps * float64(vmstat.pageins),
-		"swapped_out_bytes_total": ps * float64(vmstat.pageouts),
-		"total_bytes":             float64(total),
+		"active_pages":            float64(vmstat.active_count),
+		"compressed_pages":        float64(vmstat.compressor_page_count),
+		"inactive_pages":          float64(vmstat.inactive_count),
+		"wired_pages":             float64(vmstat.wire_count),
+		"free_pages":              float64(vmstat.free_count),
+		"swapped_in_pages_total":  float64(vmstat.pageins),
+		"swapped_out_pages_total": float64(vmstat.pageouts),
+		"cow_faults":              float64(vmstat.cow_faults),
+		"zero_filled_pages":       float64(vmstat.zero_fill_count),
+		"total_faults":       	   float64(vmstat.faults),
+		"cache_hits":       	   float64(vmstat.hits),
+		"total_bytes":             ps * float64(total),
 		"swap_used_bytes":         float64(swap.xsu_used),
 		"swap_total_bytes":        float64(swap.xsu_total),
 	}, nil
