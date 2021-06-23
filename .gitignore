@@ -37,3 +37,5 @@ dependencies-stamp
 collector/fixtures/sys/
 
 /vendor
+
+setup/mac/data/*
