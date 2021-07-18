@@ -111,7 +111,7 @@ func (c *mdadmCollector) Update(ch chan<- prometheus.Metric) error {
 
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
-			level.Debug(c.logger).Log("msg", "Not collecting mdstat, file does not exist", "file", *procPath)
+			_ = level.Debug(c.logger).Log("msg", "Not collecting mdstat, file does not exist", "file", *procPath)
 			return ErrNoData
 		}
 
@@ -119,7 +119,7 @@ func (c *mdadmCollector) Update(ch chan<- prometheus.Metric) error {
 	}
 
 	for _, mdStat := range mdStats {
-		level.Debug(c.logger).Log("msg", "collecting metrics for device", "device", mdStat.Name)
+		_ = level.Debug(c.logger).Log("msg", "collecting metrics for device", "device", mdStat.Name)
 
 		stateVals := make(map[string]float64)
 		stateVals[mdStat.ActivityState] = 1

@@ -79,11 +79,11 @@ func (c *runitCollector) Update(ch chan<- prometheus.Metric) error {
 	for _, service := range services {
 		status, err := service.Status()
 		if err != nil {
-			level.Debug(c.logger).Log("msg", "Couldn't get status", "service", service.Name, "err", err)
+			_ = level.Debug(c.logger).Log("msg", "Couldn't get status", "service", service.Name, "err", err)
 			continue
 		}
 
-		level.Debug(c.logger).Log("msg", "duration", "service", service.Name, "status", status.State, "pid", status.Pid, "duration_seconds", status.Duration)
+		_ = level.Debug(c.logger).Log("msg", "duration", "service", service.Name, "status", status.State, "pid", status.Pid, "duration_seconds", status.Duration)
 		ch <- c.state.mustNewConstMetric(float64(status.State), service.Name)
 		ch <- c.stateDesired.mustNewConstMetric(float64(status.Want), service.Name)
 		ch <- c.stateTimestamp.mustNewConstMetric(float64(status.Timestamp.Unix()), service.Name)

@@ -65,7 +65,7 @@ func (c *nfsdCollector) Update(ch chan<- prometheus.Metric) error {
 	stats, err := c.fs.ServerRPCStats()
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
-			level.Debug(c.logger).Log("msg", "Not collecting NFSd metrics", "err", err)
+			_ = level.Debug(c.logger).Log("msg", "Not collecting NFSd metrics", "err", err)
 			return ErrNoData
 		}
 		return fmt.Errorf("failed to retrieve nfsd stats: %w", err)

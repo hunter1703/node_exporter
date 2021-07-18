@@ -62,7 +62,7 @@ func (c *buddyinfoCollector) Update(ch chan<- prometheus.Metric) error {
 		return fmt.Errorf("couldn't get buddyinfo: %w", err)
 	}
 
-	level.Debug(c.logger).Log("msg", "Set node_buddy", "buddyInfo", buddyInfo)
+	_ = level.Debug(c.logger).Log("msg", "Set node_buddy", "buddyInfo", buddyInfo)
 	for _, entry := range buddyInfo {
 		for size, value := range entry.Sizes {
 			ch <- prometheus.MustNewConstMetric(

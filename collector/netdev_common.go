@@ -50,7 +50,7 @@ func init() {
 func NewNetDevCollector(logger log.Logger) (Collector, error) {
 	if *oldNetdevDeviceInclude != "" {
 		if *netdevDeviceInclude == "" {
-			level.Warn(logger).Log("msg", "--collector.netdev.device-whitelist is DEPRECATED and will be removed in 2.0.0, use --collector.netdev.device-include")
+			_ = level.Warn(logger).Log("msg", "--collector.netdev.device-whitelist is DEPRECATED and will be removed in 2.0.0, use --collector.netdev.device-include")
 			*netdevDeviceInclude = *oldNetdevDeviceInclude
 		} else {
 			return nil, errors.New("--collector.netdev.device-whitelist and --collector.netdev.device-include are mutually exclusive")
@@ -59,7 +59,7 @@ func NewNetDevCollector(logger log.Logger) (Collector, error) {
 
 	if *oldNetdevDeviceExclude != "" {
 		if *netdevDeviceExclude == "" {
-			level.Warn(logger).Log("msg", "--collector.netdev.device-blacklist is DEPRECATED and will be removed in 2.0.0, use --collector.netdev.device-exclude")
+			_ = level.Warn(logger).Log("msg", "--collector.netdev.device-blacklist is DEPRECATED and will be removed in 2.0.0, use --collector.netdev.device-exclude")
 			*netdevDeviceExclude = *oldNetdevDeviceExclude
 		} else {
 			return nil, errors.New("--collector.netdev.device-blacklist and --collector.netdev.device-exclude are mutually exclusive")
@@ -71,11 +71,11 @@ func NewNetDevCollector(logger log.Logger) (Collector, error) {
 	}
 
 	if *netdevDeviceExclude != "" {
-		level.Info(logger).Log("msg", "Parsed flag --collector.netdev.device-exclude", "flag", *netdevDeviceExclude)
+		_ = level.Info(logger).Log("msg", "Parsed flag --collector.netdev.device-exclude", "flag", *netdevDeviceExclude)
 	}
 
 	if *netdevDeviceInclude != "" {
-		level.Info(logger).Log("msg", "Parsed Flag --collector.netdev.device-include", "flag", *netdevDeviceInclude)
+		_ = level.Info(logger).Log("msg", "Parsed Flag --collector.netdev.device-include", "flag", *netdevDeviceInclude)
 	}
 
 	return &netDevCollector{

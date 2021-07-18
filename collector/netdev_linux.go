@@ -67,7 +67,7 @@ func parseNetDevStats(r io.Reader, filter *netDevFilter, logger log.Logger) (net
 
 		dev := parts[1]
 		if filter.ignored(dev) {
-			level.Debug(logger).Log("msg", "Ignoring device", "device", dev)
+			_ = level.Debug(logger).Log("msg", "Ignoring device", "device", dev)
 			continue
 		}
 
@@ -80,7 +80,7 @@ func parseNetDevStats(r io.Reader, filter *netDevFilter, logger log.Logger) (net
 		addStats := func(key, value string) {
 			v, err := strconv.ParseUint(value, 0, 64)
 			if err != nil {
-				level.Debug(logger).Log("msg", "invalid value in netstats", "key", key, "value", value, "err", err)
+				_ = level.Debug(logger).Log("msg", "invalid value in netstats", "key", key, "value", value, "err", err)
 				return
 			}
 

@@ -190,7 +190,7 @@ func (c *drbdCollector) Update(ch chan<- prometheus.Metric) error {
 	file, err := os.Open(statsFile)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
-			level.Debug(c.logger).Log("msg", "stats file does not exist, skipping", "file", statsFile, "err", err)
+			_ = level.Debug(c.logger).Log("msg", "stats file does not exist, skipping", "file", statsFile, "err", err)
 			return ErrNoData
 		}
 
@@ -207,7 +207,7 @@ func (c *drbdCollector) Update(ch chan<- prometheus.Metric) error {
 
 		kv := strings.Split(field, ":")
 		if len(kv) != 2 {
-			level.Debug(c.logger).Log("msg", "skipping invalid key:value pair", "field", field)
+			_ = level.Debug(c.logger).Log("msg", "skipping invalid key:value pair", "field", field)
 			continue
 		}
 
@@ -273,7 +273,7 @@ func (c *drbdCollector) Update(ch chan<- prometheus.Metric) error {
 			continue
 		}
 
-		level.Debug(c.logger).Log("msg", "unhandled key-value pair", "key", kv[0], "value", kv[1])
+		_ = level.Debug(c.logger).Log("msg", "unhandled key-value pair", "key", kv[0], "value", kv[1])
 	}
 
 	return scanner.Err()

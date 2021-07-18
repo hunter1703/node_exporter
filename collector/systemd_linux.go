@@ -132,7 +132,7 @@ func NewSystemdCollector(logger log.Logger) (Collector, error) {
 
 	if *oldUnitExclude != "" {
 		if !unitExcludeSet {
-			level.Warn(logger).Log("msg", "--collector.systemd.unit-blacklist is DEPRECATED and will be removed in 2.0.0, use --collector.systemd.unit-exclude")
+			_ = level.Warn(logger).Log("msg", "--collector.systemd.unit-blacklist is DEPRECATED and will be removed in 2.0.0, use --collector.systemd.unit-exclude")
 			*unitExclude = *oldUnitExclude
 		} else {
 			return nil, errors.New("--collector.systemd.unit-blacklist and --collector.systemd.unit-exclude are mutually exclusive")
@@ -140,21 +140,21 @@ func NewSystemdCollector(logger log.Logger) (Collector, error) {
 	}
 	if *oldUnitInclude != "" {
 		if !unitIncludeSet {
-			level.Warn(logger).Log("msg", "--collector.systemd.unit-whitelist is DEPRECATED and will be removed in 2.0.0, use --collector.systemd.unit-include")
+			_ = level.Warn(logger).Log("msg", "--collector.systemd.unit-whitelist is DEPRECATED and will be removed in 2.0.0, use --collector.systemd.unit-include")
 			*unitInclude = *oldUnitInclude
 		} else {
 			return nil, errors.New("--collector.systemd.unit-whitelist and --collector.systemd.unit-include are mutually exclusive")
 		}
 	}
-	level.Info(logger).Log("msg", "Parsed flag --collector.systemd.unit-include", "flag", *unitInclude)
+	_ = level.Info(logger).Log("msg", "Parsed flag --collector.systemd.unit-include", "flag", *unitInclude)
 	unitIncludePattern := regexp.MustCompile(fmt.Sprintf("^(?:%s)$", *unitInclude))
-	level.Info(logger).Log("msg", "Parsed flag --collector.systemd.unit-exclude", "flag", *unitExclude)
+	_ = level.Info(logger).Log("msg", "Parsed flag --collector.systemd.unit-exclude", "flag", *unitExclude)
 	unitExcludePattern := regexp.MustCompile(fmt.Sprintf("^(?:%s)$", *unitExclude))
 
 	systemdVersion := getSystemdVersion(logger)
 	if systemdVersion < minSystemdVersionSystemState {
-		level.Warn(logger).Log("msg", "Detected systemd version is lower than minimum", "current", systemdVersion, "minimum", minSystemdVersionSystemState)
-		level.Warn(logger).Log("msg", "Some systemd state and timer metrics will not be available")
+		_ = level.Warn(logger).Log("msg", "Detected systemd version is lower than minimum", "current", systemdVersion, "minimum", minSystemdVersionSystemState)
+		_ = level.Warn(logger).Log("msg", "Some systemd state and timer metrics will not be available")
 	}
 
 	return &systemdCollector{
@@ -191,16 +191,16 @@ func (c *systemdCollector) Update(ch chan<- prometheus.Metric) error {
 	if err != nil {
 		return fmt.Errorf("couldn't get units: %w", err)
 	}
-	level.Debug(c.logger).Log("msg", "getAllUnits took", "duration_seconds", time.Since(begin).Seconds())
+	_ = level.Debug(c.logger).Log("msg", "getAllUnits took", "duration_seconds", time.Since(begin).Seconds())
 
 	begin = time.Now()
 	summary := summarizeUnits(allUnits)
 	c.collectSummaryMetrics(ch, summary)
-	level.Debug(c.logger).Log("msg", "collectSummaryMetrics took", "duration_seconds", time.Since(begin).Seconds())
+	_ = level.Debug(c.logger).Log("msg", "collectSummaryMetrics took", "duration_seconds", time.Since(begin).Seconds())
 
 	begin = time.Now()
 	units := filterUnits(allUnits, c.unitIncludePattern, c.unitExcludePattern, c.logger)
-	level.Debug(c.logger).Log("msg", "filterUnits took", "duration_seconds", time.Since(begin).Seconds())
+	_ = level.Debug(c.logger).Log("msg", "filterUnits took", "duration_seconds", time.Since(begin).Seconds())
 
 	var wg sync.WaitGroup
 	defer wg.Wait()
@@ -210,7 +210,7 @@ func (c *systemdCollector) Update(ch chan<- prometheus.Metric) error {
 		defer wg.Done()
 		begin = time.Now()
 		c.collectUnitStatusMetrics(conn, ch, units)
-		level.Debug(c.logger).Log("msg", "collectUnitStatusMetrics took", "duration_seconds", time.Since(begin).Seconds())
+		_ = level.Debug(c.logger).Log("msg", "collectUnitStatusMetrics took", "duration_seconds", time.Since(begin).Seconds())
 	}()
 
 	if *enableStartTimeMetrics {
@@ -219,7 +219,7 @@ func (c *systemdCollector) Update(ch chan<- prometheus.Metric) error {
 			defer wg.Done()
 			begin = time.Now()
 			c.collectUnitStartTimeMetrics(conn, ch, units)
-			level.Debug(c.logger).Log("msg", "collectUnitStartTimeMetrics took", "duration_seconds", time.Since(begin).Seconds())
+			_ = level.Debug(c.logger).Log("msg", "collectUnitStartTimeMetrics took", "duration_seconds", time.Since(begin).Seconds())
 		}()
 	}
 
@@ -229,7 +229,7 @@ func (c *systemdCollector) Update(ch chan<- prometheus.Metric) error {
 			defer wg.Done()
 			begin = time.Now()
 			c.collectUnitTasksMetrics(conn, ch, units)
-			level.Debug(c.logger).Log("msg", "collectUnitTasksMetrics took", "duration_seconds", time.Since(begin).Seconds())
+			_ = level.Debug(c.logger).Log("msg", "collectUnitTasksMetrics took", "duration_seconds", time.Since(begin).Seconds())
 		}()
 	}
 
@@ -239,7 +239,7 @@ func (c *systemdCollector) Update(ch chan<- prometheus.Metric) error {
 			defer wg.Done()
 			begin = time.Now()
 			c.collectTimers(conn, ch, units)
-			level.Debug(c.logger).Log("msg", "collectTimers took", "duration_seconds", time.Since(begin).Seconds())
+			_ = level.Debug(c.logger).Log("msg", "collectTimers took", "duration_seconds", time.Since(begin).Seconds())
 		}()
 	}
 
@@ -248,13 +248,13 @@ func (c *systemdCollector) Update(ch chan<- prometheus.Metric) error {
 		defer wg.Done()
 		begin = time.Now()
 		c.collectSockets(conn, ch, units)
-		level.Debug(c.logger).Log("msg", "collectSockets took", "duration_seconds", time.Since(begin).Seconds())
+		_ = level.Debug(c.logger).Log("msg", "collectSockets took", "duration_seconds", time.Since(begin).Seconds())
 	}()
 
 	if c.systemdVersion >= minSystemdVersionSystemState {
 		begin = time.Now()
 		err = c.collectSystemState(conn, ch)
-		level.Debug(c.logger).Log("msg", "collectSystemState took", "duration_seconds", time.Since(begin).Seconds())
+		_ = level.Debug(c.logger).Log("msg", "collectSystemState took", "duration_seconds", time.Since(begin).Seconds())
 	}
 
 	ch <- prometheus.MustNewConstMetric(
@@ -269,14 +269,14 @@ func (c *systemdCollector) collectUnitStatusMetrics(conn *dbus.Conn, ch chan<- p
 		if strings.HasSuffix(unit.Name, ".service") {
 			serviceTypeProperty, err := conn.GetUnitTypeProperty(unit.Name, "Service", "Type")
 			if err != nil {
-				level.Debug(c.logger).Log("msg", "couldn't get unit type", "unit", unit.Name, "err", err)
+				_ = level.Debug(c.logger).Log("msg", "couldn't get unit type", "unit", unit.Name, "err", err)
 			} else {
 				serviceType = serviceTypeProperty.Value.Value().(string)
 			}
 		} else if strings.HasSuffix(unit.Name, ".mount") {
 			serviceTypeProperty, err := conn.GetUnitTypeProperty(unit.Name, "Mount", "Type")
 			if err != nil {
-				level.Debug(c.logger).Log("msg", "couldn't get unit type", "unit", unit.Name, "err", err)
+				_ = level.Debug(c.logger).Log("msg", "couldn't get unit type", "unit", unit.Name, "err", err)
 			} else {
 				serviceType = serviceTypeProperty.Value.Value().(string)
 			}
@@ -294,7 +294,7 @@ func (c *systemdCollector) collectUnitStatusMetrics(conn *dbus.Conn, ch chan<- p
 			// NRestarts wasn't added until systemd 235.
 			restartsCount, err := conn.GetUnitTypeProperty(unit.Name, "Service", "NRestarts")
 			if err != nil {
-				level.Debug(c.logger).Log("msg", "couldn't get unit NRestarts", "unit", unit.Name, "err", err)
+				_ = level.Debug(c.logger).Log("msg", "couldn't get unit NRestarts", "unit", unit.Name, "err", err)
 			} else {
 				ch <- prometheus.MustNewConstMetric(
 					c.nRestartsDesc, prometheus.CounterValue,
@@ -312,7 +312,7 @@ func (c *systemdCollector) collectSockets(conn *dbus.Conn, ch chan<- prometheus.
 
 		acceptedConnectionCount, err := conn.GetUnitTypeProperty(unit.Name, "Socket", "NAccepted")
 		if err != nil {
-			level.Debug(c.logger).Log("msg", "couldn't get unit NAccepted", "unit", unit.Name, "err", err)
+			_ = level.Debug(c.logger).Log("msg", "couldn't get unit NAccepted", "unit", unit.Name, "err", err)
 			continue
 		}
 		ch <- prometheus.MustNewConstMetric(
@@ -321,7 +321,7 @@ func (c *systemdCollector) collectSockets(conn *dbus.Conn, ch chan<- prometheus.
 
 		currentConnectionCount, err := conn.GetUnitTypeProperty(unit.Name, "Socket", "NConnections")
 		if err != nil {
-			level.Debug(c.logger).Log("msg", "couldn't get unit NConnections", "unit", unit.Name, "err", err)
+			_ = level.Debug(c.logger).Log("msg", "couldn't get unit NConnections", "unit", unit.Name, "err", err)
 			continue
 		}
 		ch <- prometheus.MustNewConstMetric(
@@ -349,7 +349,7 @@ func (c *systemdCollector) collectUnitStartTimeMetrics(conn *dbus.Conn, ch chan<
 		} else {
 			timestampValue, err := conn.GetUnitProperty(unit.Name, "ActiveEnterTimestamp")
 			if err != nil {
-				level.Debug(c.logger).Log("msg", "couldn't get unit StartTimeUsec", "unit", unit.Name, "err", err)
+				_ = level.Debug(c.logger).Log("msg", "couldn't get unit StartTimeUsec", "unit", unit.Name, "err", err)
 				continue
 			}
 			startTimeUsec = timestampValue.Value.Value().(uint64)
@@ -367,7 +367,7 @@ func (c *systemdCollector) collectUnitTasksMetrics(conn *dbus.Conn, ch chan<- pr
 		if strings.HasSuffix(unit.Name, ".service") {
 			tasksCurrentCount, err := conn.GetUnitTypeProperty(unit.Name, "Service", "TasksCurrent")
 			if err != nil {
-				level.Debug(c.logger).Log("msg", "couldn't get unit TasksCurrent", "unit", unit.Name, "err", err)
+				_ = level.Debug(c.logger).Log("msg", "couldn't get unit TasksCurrent", "unit", unit.Name, "err", err)
 			} else {
 				val = tasksCurrentCount.Value.Value().(uint64)
 				// Don't set if tasksCurrent if dbus reports MaxUint64.
@@ -379,7 +379,7 @@ func (c *systemdCollector) collectUnitTasksMetrics(conn *dbus.Conn, ch chan<- pr
 			}
 			tasksMaxCount, err := conn.GetUnitTypeProperty(unit.Name, "Service", "TasksMax")
 			if err != nil {
-				level.Debug(c.logger).Log("msg", "couldn't get unit TasksMax", "unit", unit.Name, "err", err)
+				_ = level.Debug(c.logger).Log("msg", "couldn't get unit TasksMax", "unit", unit.Name, "err", err)
 			} else {
 				val = tasksMaxCount.Value.Value().(uint64)
 				// Don't set if tasksMax if dbus reports MaxUint64.
@@ -401,7 +401,7 @@ func (c *systemdCollector) collectTimers(conn *dbus.Conn, ch chan<- prometheus.M
 
 		lastTriggerValue, err := conn.GetUnitTypeProperty(unit.Name, "Timer", "LastTriggerUSec")
 		if err != nil {
-			level.Debug(c.logger).Log("msg", "couldn't get unit LastTriggerUSec", "unit", unit.Name, "err", err)
+			_ = level.Debug(c.logger).Log("msg", "couldn't get unit LastTriggerUSec", "unit", unit.Name, "err", err)
 			continue
 		}
 
@@ -477,10 +477,10 @@ func filterUnits(units []unit, includePattern, excludePattern *regexp.Regexp, lo
 	filtered := make([]unit, 0, len(units))
 	for _, unit := range units {
 		if includePattern.MatchString(unit.Name) && !excludePattern.MatchString(unit.Name) && unit.LoadState == "loaded" {
-			level.Debug(logger).Log("msg", "Adding unit", "unit", unit.Name)
+			_ = level.Debug(logger).Log("msg", "Adding unit", "unit", unit.Name)
 			filtered = append(filtered, unit)
 		} else {
-			level.Debug(logger).Log("msg", "Ignoring unit", "unit", unit.Name)
+			_ = level.Debug(logger).Log("msg", "Ignoring unit", "unit", unit.Name)
 		}
 	}
 
@@ -490,20 +490,20 @@ func filterUnits(units []unit, includePattern, excludePattern *regexp.Regexp, lo
 func getSystemdVersion(logger log.Logger) int {
 	conn, err := newSystemdDbusConn()
 	if err != nil {
-		level.Warn(logger).Log("msg", "Unable to get systemd dbus connection, defaulting systemd version to 0", "err", err)
+		_ = level.Warn(logger).Log("msg", "Unable to get systemd dbus connection, defaulting systemd version to 0", "err", err)
 		return 0
 	}
 	defer conn.Close()
 	version, err := conn.GetManagerProperty("Version")
 	if err != nil {
-		level.Warn(logger).Log("msg", "Unable to get systemd version property, defaulting to 0")
+		_ = level.Warn(logger).Log("msg", "Unable to get systemd version property, defaulting to 0")
 		return 0
 	}
 	re := regexp.MustCompile(`[0-9][0-9][0-9]`)
 	version = re.FindString(version)
 	v, err := strconv.Atoi(version)
 	if err != nil {
-		level.Warn(logger).Log("msg", "Got invalid systemd version", "version", version)
+		_ = level.Warn(logger).Log("msg", "Got invalid systemd version", "version", version)
 		return 0
 	}
 	return v

@@ -540,7 +540,7 @@ func (c *mountStatsCollector) Update(ch chan<- prometheus.Metric) error {
 		deviceIdentifier := nfsDeviceIdentifier{m.Device, stats.Transport.Protocol, mountAddress}
 		i := deviceList[deviceIdentifier]
 		if i {
-			level.Debug(c.logger).Log("msg", "Skipping duplicate device entry", "device", deviceIdentifier)
+			_ = level.Debug(c.logger).Log("msg", "Skipping duplicate device entry", "device", deviceIdentifier)
 			continue
 		}
 

@@ -70,7 +70,7 @@ func (c *zfsCollector) Update(ch chan<- prometheus.Metric) error {
 
 	if _, err := c.openProcFile(c.linuxProcpathBase); err != nil {
 		if err == errZFSNotAvailable {
-			level.Debug(c.logger).Log("err", err)
+			_ = level.Debug(c.logger).Log("err", err)
 			return ErrNoData
 		}
 	}
@@ -78,7 +78,7 @@ func (c *zfsCollector) Update(ch chan<- prometheus.Metric) error {
 	for subsystem := range c.linuxPathMap {
 		if err := c.updateZfsStats(subsystem, ch); err != nil {
 			if err == errZFSNotAvailable {
-				level.Debug(c.logger).Log("err", err)
+				_ = level.Debug(c.logger).Log("err", err)
 				// ZFS /proc files are added as new features to ZFS arrive, it is ok to continue
 				continue
 			}

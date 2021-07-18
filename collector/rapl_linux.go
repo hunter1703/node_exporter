@@ -57,11 +57,11 @@ func (c *raplCollector) Update(ch chan<- prometheus.Metric) error {
 	zones, err := sysfs.GetRaplZones(c.fs)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
-			level.Debug(c.logger).Log("msg", "Platform doesn't have powercap files present", "err", err)
+			_ = level.Debug(c.logger).Log("msg", "Platform doesn't have powercap files present", "err", err)
 			return ErrNoData
 		}
 		if errors.Is(err, os.ErrPermission) {
-			level.Debug(c.logger).Log("msg", "Can't access powercap files", "err", err)
+			_ = level.Debug(c.logger).Log("msg", "Can't access powercap files", "err", err)
 			return ErrNoData
 		}
 		return fmt.Errorf("failed to retrieve rapl stats: %w", err)

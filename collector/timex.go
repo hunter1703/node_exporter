@@ -167,7 +167,7 @@ func (c *timexCollector) Update(ch chan<- prometheus.Metric) error {
 	status, err := unix.Adjtimex(timex)
 	if err != nil {
 		if errors.Is(err, os.ErrPermission) {
-			level.Debug(c.logger).Log("msg", "Not collecting timex metrics", "err", err)
+			_ = level.Debug(c.logger).Log("msg", "Not collecting timex metrics", "err", err)
 			return ErrNoData
 		}
 		return fmt.Errorf("failed to retrieve adjtimex stats: %w", err)

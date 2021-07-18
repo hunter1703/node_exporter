@@ -61,7 +61,7 @@ func (c *bondingCollector) Update(ch chan<- prometheus.Metric) error {
 	bondingStats, err := readBondingStats(statusfile)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
-			level.Debug(c.logger).Log("msg", "Not collecting bonding, file does not exist", "file", statusfile)
+			_ = level.Debug(c.logger).Log("msg", "Not collecting bonding, file does not exist", "file", statusfile)
 			return ErrNoData
 		}
 		return err

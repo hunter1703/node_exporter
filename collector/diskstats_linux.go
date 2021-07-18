@@ -192,7 +192,7 @@ func (c *diskstatsCollector) Update(ch chan<- prometheus.Metric) error {
 
 	for dev, stats := range diskStats {
 		if c.ignoredDevicesPattern.MatchString(dev) {
-			level.Debug(c.logger).Log("msg", "Ignoring device", "device", dev)
+			_ = level.Debug(c.logger).Log("msg", "Ignoring device", "device", dev)
 			continue
 		}
 

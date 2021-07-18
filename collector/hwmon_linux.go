@@ -425,7 +425,7 @@ func (c *hwMonCollector) Update(ch chan<- prometheus.Metric) error {
 	hwmonFiles, err := ioutil.ReadDir(hwmonPathName)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
-			level.Debug(c.logger).Log("msg", "hwmon collector metrics are not available for this system")
+			_ = level.Debug(c.logger).Log("msg", "hwmon collector metrics are not available for this system")
 			return ErrNoData
 		}
 

@@ -53,7 +53,7 @@ func getNetDevStats(filter *netDevFilter, logger log.Logger) (netDevStats, error
 		data := ifm.Data
 		dev := int8ToString(dl.Data[:dl.Nlen])
 		if filter.ignored(dev) {
-			level.Debug(logger).Log("msg", "Ignoring device", "device", dev)
+			_ = level.Debug(logger).Log("msg", "Ignoring device", "device", dev)
 			continue
 		}
 

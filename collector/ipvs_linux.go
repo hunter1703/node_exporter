@@ -142,7 +142,7 @@ func (c *ipvsCollector) Update(ch chan<- prometheus.Metric) error {
 	if err != nil {
 		// Cannot access ipvs metrics, report no error.
 		if errors.Is(err, os.ErrNotExist) {
-			level.Debug(c.logger).Log("msg", "ipvs collector metrics are not available for this system")
+			_ = level.Debug(c.logger).Log("msg", "ipvs collector metrics are not available for this system")
 			return ErrNoData
 		}
 		return fmt.Errorf("could not get IPVS stats: %w", err)

@@ -133,11 +133,11 @@ func (c *statCollector) Update(ch chan<- prometheus.Metric) error {
 		if err != nil {
 			if err == unix.ENOENT {
 				// No temperature information for this CPU
-				level.Debug(c.logger).Log("msg", "no temperature information for CPU", "cpu", cpu)
+				_ = level.Debug(c.logger).Log("msg", "no temperature information for CPU", "cpu", cpu)
 			} else {
 				// Unexpected error
 				ch <- c.temp.mustNewConstMetric(math.NaN(), lcpu)
-				level.Error(c.logger).Log("msg", "failed to query CPU temperature for CPU", "cpu", cpu, "err", err)
+				_ = level.Error(c.logger).Log("msg", "failed to query CPU temperature for CPU", "cpu", cpu, "err", err)
 			}
 			continue
 		}

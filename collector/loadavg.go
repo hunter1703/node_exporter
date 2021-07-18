@@ -51,7 +51,7 @@ func (c *loadavgCollector) Update(ch chan<- prometheus.Metric) error {
 		return fmt.Errorf("couldn't get load: %w", err)
 	}
 	for i, load := range loads {
-		level.Debug(c.logger).Log("msg", "return load", "index", i, "load", load)
+		_ = level.Debug(c.logger).Log("msg", "return load", "index", i, "load", load)
 		ch <- c.metric[i].mustNewConstMetric(load)
 	}
 	return err

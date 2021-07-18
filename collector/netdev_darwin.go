@@ -36,13 +36,13 @@ func getNetDevStats(filter *netDevFilter, logger log.Logger) (netDevStats, error
 
 	for _, iface := range ifs {
 		if filter.ignored(iface.Name) {
-			level.Debug(logger).Log("msg", "Ignoring device", "device", iface.Name)
+			_ = level.Debug(logger).Log("msg", "Ignoring device", "device", iface.Name)
 			continue
 		}
 
 		ifaceData, err := getIfaceData(iface.Index)
 		if err != nil {
-			level.Debug(logger).Log("msg", "failed to load data for interface", "device", iface.Name, "err", err)
+			_ = level.Debug(logger).Log("msg", "failed to load data for interface", "device", iface.Name, "err", err)
 			continue
 		}
 

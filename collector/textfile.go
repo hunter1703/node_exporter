@@ -79,7 +79,7 @@ func convertMetricFamily(metricFamily *dto.MetricFamily, ch chan<- prometheus.Me
 
 	for _, metric := range metricFamily.Metric {
 		if metric.TimestampMs != nil {
-			level.Warn(logger).Log("msg", "Ignoring unsupported custom timestamp on textfile collector metric", "metric", metric)
+			_ = level.Warn(logger).Log("msg", "Ignoring unsupported custom timestamp on textfile collector metric", "metric", metric)
 		}
 
 		labels := metric.GetLabel()
@@ -194,7 +194,7 @@ func (c *textFileCollector) Update(ch chan<- prometheus.Metric) error {
 	files, err := ioutil.ReadDir(c.path)
 	if err != nil && c.path != "" {
 		errored = true
-		level.Error(c.logger).Log("msg", "failed to read textfile collector directory", "path", c.path, "err", err)
+		_ = level.Error(c.logger).Log("msg", "failed to read textfile collector directory", "path", c.path, "err", err)
 	}
 
 	mtimes := make(map[string]time.Time, len(files))
@@ -206,7 +206,7 @@ func (c *textFileCollector) Update(ch chan<- prometheus.Metric) error {
 		mtime, err := c.processFile(f.Name(), ch)
 		if err != nil {
 			errored = true
-			level.Error(c.logger).Log("msg", "failed to collect textfile data", "file", f.Name(), "err", err)
+			_ = level.Error(c.logger).Log("msg", "failed to collect textfile data", "file", f.Name(), "err", err)
 			continue
 		}
 

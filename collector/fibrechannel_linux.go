@@ -110,7 +110,7 @@ func (c *fibrechannelCollector) Update(ch chan<- prometheus.Metric) error {
 	hosts, err := c.fs.FibreChannelClass()
 	if err != nil {
 		if os.IsNotExist(err) {
-			level.Debug(c.logger).Log("msg", "fibrechannel statistics not found, skipping")
+			_ = level.Debug(c.logger).Log("msg", "fibrechannel statistics not found, skipping")
 			return ErrNoData
 		}
 		return fmt.Errorf("error obtaining FibreChannel class info: %s", err)

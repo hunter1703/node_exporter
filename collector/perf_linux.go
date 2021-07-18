@@ -163,7 +163,7 @@ func (c *perfTracepointCollector) updateCPU(cpu int, ch chan<- prometheus.Metric
 	profiler := c.profilers[cpu]
 	p, err := profiler.Profile()
 	if err != nil {
-		level.Error(c.logger).Log("msg", "Failed to collect tracepoint profile", "err", err)
+		_ = level.Error(c.logger).Log("msg", "Failed to collect tracepoint profile", "err", err)
 		return err
 	}
 
