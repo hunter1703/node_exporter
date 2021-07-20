@@ -53,19 +53,13 @@ func NewTimeCollector(logger log.Logger) (Collector, error) {
 }
 
 func (c *timeCollector) Update(ch chan<- prometheus.Metric) error {
-<<<<<<< HEAD
 	now := time.Now()
 	nowSec := float64(now.UnixNano()) / 1e9
 	zone, zoneOffset := now.Zone()
 
-	level.Debug(c.logger).Log("msg", "Return time", "now", nowSec)
+	_ = level.Debug(c.logger).Log("msg", "Return time", "now", nowSec)
 	ch <- prometheus.MustNewConstMetric(c.nowDesc, prometheus.GaugeValue, nowSec)
-	level.Debug(c.logger).Log("msg", "Zone offset", "offset", zoneOffset, "time_zone", zone)
+	_ = level.Debug(c.logger).Log("msg", "Zone offset", "offset", zoneOffset, "time_zone", zone)
 	ch <- prometheus.MustNewConstMetric(c.zoneDesc, prometheus.GaugeValue, float64(zoneOffset), zone)
-=======
-	now := float64(time.Now().UnixNano()) / 1e9
-	_ = level.Debug(c.logger).Log("msg", "Return time", "now", now)
-	ch <- prometheus.MustNewConstMetric(c.desc, prometheus.GaugeValue, now)
->>>>>>> b06b7e2 (build fixes)
 	return nil
 }

@@ -26,6 +26,7 @@ dependencies-stamp
 /.deps
 /.release
 /.tarballs
+setup/*/data
 *.DS_Store
 
 # Intellij
