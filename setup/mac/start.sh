@@ -1,12 +1,22 @@
 #!/bin/bash
 
-dir="~/monitoring"
-mkdir -p $dir
+logdir="/Users/gandalf/Projects/tmp/monitoring"
+dir="/Users/gandalf/Projects/monitoring"
+node_exporter_dir=$dir/node_exporter
+prometheus_dir=$dir/prometheus
+grafana_dir=$dir/grafana
+
+# create folders and files
+mkdir -p $logdir
+touch $logdir/node_exporter.out
+touch $logdir/node_exporter.err
+touch $logdir/prometheus.out
+touch $logdir/prometheus.err
 #node_exporter
-/Users/rahul/Downloads/node_exporter/node_exporter > $dir/node_exporter.out 2>$dir/node_exporter.err &
+$node_exporter_dir/node_exporter > $logdir/node_exporter.out 2>$logdir/node_exporter.err &
 
 #prometheus
-/Users/rahul/Downloads/prometheus-2.27.1.darwin-amd64/prometheus --config.file=/Users/rahul/Downloads/prometheus-2.27.1.darwin-amd64/prometheus.yml > $dir/prometheus.out 2>$dir/prometheus.err &
+$prometheus_dir/prometheus --config.file=$prometheus_dir/prometheus.yml > $logdir/prometheus.out 2>$logdir/prometheus.err &
 
 #grafana
-grafana-server --config=/usr/local/etc/grafana/grafana.ini --homepath /usr/local/share/grafana --packaging=brew cfg:default.paths.logs=/usr/local/var/log/grafana cfg:default.paths.data=/usr/local/var/lib/grafana cfg:default.paths.plugins=/usr/local/var/lib/grafana/plugins > $dir/grafana.out 2>$dir/grafana.err &
+$grafana_dir/bin/grafana-server --homepath $grafana_dir --packaging=brew cfg:default.paths.logs=$grafana_dir cfg:default.paths.data=$grafana_dir cfg:default.paths.plugins=$grafana_dir/plugins > $logdir/grafana.out 2>$logdir/grafana.err &
