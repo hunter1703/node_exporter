@@ -78,8 +78,5 @@ func (c *meminfoCollector) getMemInfo() (map[string]float64, error) {
 		"total_bytes":             ps * float64(total),
 		"swap_used_bytes":         float64(swap.xsu_used),
 		"swap_total_bytes":        float64(swap.xsu_total),
-		// file system cache performance monitoring
-		"cache_lookups": float64(vmstat.lookups),
-		"cache_hits":    float64(vmstat.hits),
 	}, nil
 }
