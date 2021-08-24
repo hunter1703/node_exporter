@@ -60,13 +60,16 @@ func (c *meminfoCollector) getMemInfo() (map[string]float64, error) {
 
 	ps := float64(pageSize)
 	return map[string]float64{
-		"active_pages":            float64(vmstat.active_count),
+		"active_pages":     float64(vmstat.active_count),
+		"inactive_pages":   float64(vmstat.inactive_count),
+		"wired_pages":      float64(vmstat.wire_count),
+		"anonymous_pages":  float64(vmstat.internal_page_count),
+		"filesystem_pages": float64(vmstat.external_page_count),
+		"free_pages":       float64(vmstat.free_count),
+		// https://apple.stackexchange.com/a/347056
+		"speculative_pages": float64(vmstat.speculative_count),
+		// # of pages used by the compressed pager to hold all the compressed data
 		"compressed_pages":        float64(vmstat.compressor_page_count),
-		"inactive_pages":          float64(vmstat.inactive_count),
-		"wired_pages":             float64(vmstat.wire_count),
-		"anonymous_pages":         float64(vmstat.internal_page_count),
-		"filesystem_pages":        float64(vmstat.external_page_count),
-		"free_pages":              float64(vmstat.free_count),
 		"swapped_in_pages_total":  float64(vmstat.swapins),
 		"swapped_out_pages_total": float64(vmstat.swapouts),
 		"cow_faults":              float64(vmstat.cow_faults),
@@ -75,5 +78,8 @@ func (c *meminfoCollector) getMemInfo() (map[string]float64, error) {
 		"total_bytes":             ps * float64(total),
 		"swap_used_bytes":         float64(swap.xsu_used),
 		"swap_total_bytes":        float64(swap.xsu_total),
+		// file system cache performance monitoring
+		"cache_lookups": float64(vmstat.lookups),
+		"cache_hits":    float64(vmstat.hits),
 	}, nil
 }
