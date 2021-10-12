@@ -8,6 +8,12 @@
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
         "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
         "type": "dashboard"
       }
     ]
@@ -15,8 +21,8 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 4,
-  "iteration": 1625637737824,
+  "id": 2,
+  "iteration": 1634074348233,
   "links": [],
   "panels": [
     {
@@ -41,12 +47,6 @@
       "datasource": null,
       "fieldConfig": {
         "defaults": {
-          "color": {},
-          "custom": {},
-          "thresholds": {
-            "mode": "absolute",
-            "steps": []
-          },
           "unit": "short"
         },
         "overrides": []
@@ -77,7 +77,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.4.0",
+      "pluginVersion": "8.1.2",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -87,7 +87,8 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "node_load1/6",
+          "exemplar": true,
+          "expr": "node_load1 / $cores",
           "interval": "",
           "legendFormat": "per cpu",
           "refId": "A"
@@ -142,12 +143,6 @@
       "datasource": null,
       "fieldConfig": {
         "defaults": {
-          "color": {},
-          "custom": {},
-          "thresholds": {
-            "mode": "absolute",
-            "steps": []
-          },
           "unit": "short"
         },
         "overrides": []
@@ -178,7 +173,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.4.0",
+      "pluginVersion": "8.1.2",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -257,13 +252,169 @@
       }
     },
     {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 10
+      },
+      "hiddenSeries": false,
+      "id": 18,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "maxPerRow": 2,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.1.2",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "repeat": "cpu_states",
+      "repeatDirection": "h",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "(sum(idelta(node_cpu_seconds_total{mode=~\"$cpu_states\", cpu=\"0\"}[1m]))/sum(idelta(node_cpu_seconds_total{cpu=\"0\"}[1m]))) * 100",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "0",
+          "refId": "A"
+        },
+        {
+          "exemplar": true,
+          "expr": "(sum(idelta(node_cpu_seconds_total{mode=~\"$cpu_states\", cpu=\"1\"}[1m]))/sum(idelta(node_cpu_seconds_total{cpu=\"1\"}[1m]))) * 100",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "1",
+          "refId": "B"
+        },
+        {
+          "exemplar": true,
+          "expr": "(sum(idelta(node_cpu_seconds_total{mode=~\"$cpu_states\", cpu=\"2\"}[1m]))/sum(idelta(node_cpu_seconds_total{cpu=\"2\"}[1m]))) * 100",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "2",
+          "refId": "C"
+        },
+        {
+          "exemplar": true,
+          "expr": "(sum(idelta(node_cpu_seconds_total{mode=~\"$cpu_states\", cpu=\"3\"}[1m]))/sum(idelta(node_cpu_seconds_total{cpu=\"3\"}[1m]))) * 100",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "3",
+          "refId": "D"
+        },
+        {
+          "exemplar": true,
+          "expr": "(sum(idelta(node_cpu_seconds_total{mode=~\"$cpu_states\", cpu=\"4\"}[1m]))/sum(idelta(node_cpu_seconds_total{cpu=\"4\"}[1m]))) * 100",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "4",
+          "refId": "E"
+        },
+        {
+          "exemplar": true,
+          "expr": "(sum(idelta(node_cpu_seconds_total{mode=~\"$cpu_states\", cpu=\"5\"}[1m]))/sum(idelta(node_cpu_seconds_total{cpu=\"5\"}[1m]))) * 100",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "5",
+          "refId": "F"
+        },
+        {
+          "exemplar": true,
+          "expr": "(sum(idelta(node_cpu_seconds_total{mode=~\"$cpu_states\", cpu=\"6\"}[1m]))/sum(idelta(node_cpu_seconds_total{cpu=\"6\"}[1m]))) * 100",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "6",
+          "refId": "G"
+        },
+        {
+          "exemplar": true,
+          "expr": "(sum(idelta(node_cpu_seconds_total{mode=~\"$cpu_states\", cpu=\"7\"}[1m]))/sum(idelta(node_cpu_seconds_total{cpu=\"7\"}[1m]))) * 100",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "7",
+          "refId": "H"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "CPU ($cpu_states)",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
       "collapsed": false,
       "datasource": null,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 10
+        "y": 28
       },
       "id": 13,
       "panels": [],
@@ -278,12 +429,6 @@
       "datasource": null,
       "fieldConfig": {
         "defaults": {
-          "color": {},
-          "custom": {},
-          "thresholds": {
-            "mode": "absolute",
-            "steps": []
-          },
           "unit": "short"
         },
         "overrides": []
@@ -294,7 +439,7 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 11
+        "y": 29
       },
       "hiddenSeries": false,
       "id": 4,
@@ -314,7 +459,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.4.0",
+      "pluginVersion": "8.1.2",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -324,13 +469,15 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(node_disk_read_bytes_total{device=\"disk0\"}[1m])/1024",
+          "exemplar": true,
+          "expr": "rate(node_disk_read_bytes_total{device=\"disk0\"}[1m]) / 1024",
           "interval": "",
           "legendFormat": "read (KB)",
           "refId": "A"
         },
         {
-          "expr": "rate(node_disk_written_bytes_total{device=\"disk0\"}[1m])/1024",
+          "exemplar": true,
+          "expr": "rate(node_disk_written_bytes_total{device=\"disk0\"}[1m]) / 1024",
           "hide": false,
           "interval": "",
           "legendFormat": "write (KB)",
@@ -386,12 +533,6 @@
       "datasource": null,
       "fieldConfig": {
         "defaults": {
-          "color": {},
-          "custom": {},
-          "thresholds": {
-            "mode": "absolute",
-            "steps": []
-          },
           "unit": "short"
         },
         "overrides": []
@@ -402,7 +543,7 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 11
+        "y": 29
       },
       "hiddenSeries": false,
       "id": 5,
@@ -422,7 +563,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.4.0",
+      "pluginVersion": "8.1.2",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -432,13 +573,15 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(node_disk_reads_completed_total{device=\"disk0\"}[1m])/1024",
+          "exemplar": true,
+          "expr": "rate(node_disk_reads_completed_total{device=\"disk0\"}[1m])",
           "interval": "",
           "legendFormat": "read (count)",
           "refId": "A"
         },
         {
-          "expr": "rate(node_disk_writes_completed_total{device=\"disk0\"}[1m])/1024",
+          "exemplar": true,
+          "expr": "rate(node_disk_writes_completed_total{device=\"disk0\"}[1m])",
           "hide": false,
           "interval": "",
           "legendFormat": "write (count)",
@@ -493,7 +636,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 20
+        "y": 38
       },
       "id": 11,
       "panels": [],
@@ -508,12 +651,6 @@
       "datasource": null,
       "fieldConfig": {
         "defaults": {
-          "color": {},
-          "custom": {},
-          "thresholds": {
-            "mode": "absolute",
-            "steps": []
-          },
           "unit": "short"
         },
         "overrides": []
@@ -524,7 +661,7 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 21
+        "y": 39
       },
       "hiddenSeries": false,
       "id": 9,
@@ -544,7 +681,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.4.0",
+      "pluginVersion": "8.1.2",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -570,7 +707,8 @@
           "refId": "B"
         },
         {
-          "expr": "rate(node_memory_zero_filled_pages[15s])",
+          "exemplar": true,
+          "expr": "rate(node_memory_zero_filled_pages[1m])",
           "hide": false,
           "interval": "",
           "legendFormat": "0filled faults",
@@ -626,12 +764,6 @@
       "datasource": null,
       "fieldConfig": {
         "defaults": {
-          "color": {},
-          "custom": {},
-          "thresholds": {
-            "mode": "absolute",
-            "steps": []
-          },
           "unit": "short"
         },
         "overrides": []
@@ -642,7 +774,7 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 21
+        "y": 39
       },
       "hiddenSeries": false,
       "id": 16,
@@ -662,7 +794,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.4.0",
+      "pluginVersion": "8.1.2",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -672,10 +804,11 @@
       "steppedLine": false,
       "targets": [
         {
+          "exemplar": true,
           "expr": "(node_memory_anonymous_pages * $pageSize) / (1024 * 1024 * 1024)",
           "hide": false,
           "interval": "",
-          "legendFormat": "anonymous",
+          "legendFormat": "anonymous (GB)",
           "refId": "B"
         },
         {
@@ -686,25 +819,35 @@
           "refId": "C"
         },
         {
+          "exemplar": true,
           "expr": "(node_memory_wired_pages * $pageSize) / (1024 * 1024 * 1024)",
           "hide": false,
           "interval": "",
-          "legendFormat": "wired",
+          "legendFormat": "wired (GB)",
           "refId": "D"
         },
         {
+          "exemplar": true,
           "expr": "(node_memory_free_pages * $pageSize) / (1024 * 1024 * 1024)",
           "hide": false,
           "interval": "",
-          "legendFormat": "free",
+          "legendFormat": "free (GB)",
           "refId": "A"
+        },
+        {
+          "exemplar": true,
+          "expr": "(node_memory_compressed_pages * $pageSize) / (1024 * 1024 * 1024)",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "compressed (GB)",
+          "refId": "E"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "memory pages (GB)",
+      "title": "memory pages",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -749,12 +892,6 @@
       "datasource": null,
       "fieldConfig": {
         "defaults": {
-          "color": {},
-          "custom": {},
-          "thresholds": {
-            "mode": "absolute",
-            "steps": []
-          },
           "unit": "short"
         },
         "overrides": []
@@ -765,7 +902,7 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 30
+        "y": 48
       },
       "hiddenSeries": false,
       "id": 7,
@@ -785,7 +922,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.4.0",
+      "pluginVersion": "8.1.2",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -795,17 +932,19 @@
       "steppedLine": false,
       "targets": [
         {
+          "exemplar": true,
           "expr": "node_memory_swap_used_bytes/(1024*1024*1024)",
           "instant": false,
           "interval": "",
-          "legendFormat": "used",
+          "legendFormat": "used (GB)",
           "refId": "A"
         },
         {
+          "exemplar": true,
           "expr": "node_memory_swap_total_bytes/(1024*1024*1024)",
           "hide": false,
           "interval": "",
-          "legendFormat": "total",
+          "legendFormat": "total (GB)",
           "refId": "B"
         }
       ],
@@ -813,7 +952,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Swap space (GB)",
+      "title": "Swap space",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -858,12 +997,6 @@
       "datasource": null,
       "fieldConfig": {
         "defaults": {
-          "color": {},
-          "custom": {},
-          "thresholds": {
-            "mode": "absolute",
-            "steps": []
-          },
           "unit": "short"
         },
         "overrides": []
@@ -874,7 +1007,7 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 30
+        "y": 48
       },
       "hiddenSeries": false,
       "id": 6,
@@ -894,7 +1027,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.4.0",
+      "pluginVersion": "8.1.2",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -904,9 +1037,10 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(node_memory_swapped_out_pages_total[1m])",
+          "exemplar": true,
+          "expr": "(rate(node_memory_swapped_out_pages_total[1m]) * $blockSize)/(1024 * 1024 * 1024)",
           "interval": "",
-          "legendFormat": "page out (pages)",
+          "legendFormat": "GB",
           "refId": "A"
         }
       ],
@@ -952,8 +1086,8 @@
       }
     }
   ],
-  "refresh": "5s",
-  "schemaVersion": 27,
+  "refresh": "",
+  "schemaVersion": 30,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -964,19 +1098,93 @@
         "hide": 2,
         "label": "pageSize",
         "name": "pageSize",
+        "query": "16384",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "description": "number cores in the system",
+        "error": null,
+        "hide": 2,
+        "label": null,
+        "name": "cores",
+        "query": "8",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "description": "disk block size",
+        "error": null,
+        "hide": 2,
+        "label": null,
+        "name": "blockSize",
         "query": "4096",
         "skipUrlSync": false,
         "type": "constant"
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": false,
+          "text": [
+            "user",
+            "system",
+            "idle"
+          ],
+          "value": [
+            "user",
+            "system",
+            "idle"
+          ]
+        },
+        "description": "cpus",
+        "error": null,
+        "hide": 0,
+        "includeAll": true,
+        "label": null,
+        "multi": true,
+        "name": "cpu_states",
+        "options": [
+          {
+            "selected": false,
+            "text": "All",
+            "value": "$__all"
+          },
+          {
+            "selected": true,
+            "text": "user",
+            "value": "user"
+          },
+          {
+            "selected": true,
+            "text": "system",
+            "value": "system"
+          },
+          {
+            "selected": true,
+            "text": "idle",
+            "value": "idle"
+          },
+          {
+            "selected": false,
+            "text": "nice",
+            "value": "nice"
+          }
+        ],
+        "query": "user,system,idle,nice",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
       }
     ]
   },
   "time": {
-    "from": "now-3h",
+    "from": "now-15m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
-  "title": "My System",
-  "uid": "lCzhVlqGz",
-  "version": 81
+  "title": "Monitoring",
+  "uid": "vXLXBC77z",
+  "version": 21
 }
