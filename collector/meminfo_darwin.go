@@ -11,12 +11,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//go:build !nomeminfo
 // +build !nomeminfo
 
 package collector
 
 // #include <mach/mach_host.h>
 // #include <sys/sysctl.h>
+// #include <libproc.h>
+// #include <sys/proc_info.h>
 // typedef struct xsw_usage xsw_usage_t;
 import "C"
 
@@ -32,6 +35,8 @@ func (c *meminfoCollector) getMemInfo() (map[string]float64, error) {
 	host := C.mach_host_self()
 	infoCount := C.mach_msg_type_number_t(C.HOST_VM_INFO64_COUNT)
 	vmstat := C.vm_statistics64_data_t{}
+	procInfo := C.proc_taskinfo
+	C.proc_pidinfo(20080, C.PROC_PIDTASKINFO, 0, unsafe.Pointer(&procInfo), C.PROC_PIDTASKINFO_SIZE)
 	ret := C.host_statistics64(
 		C.host_t(host),
 		C.HOST_VM_INFO64,
