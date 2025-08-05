@@ -92,7 +92,8 @@ ifeq ($(GOHOSTOS),$(filter $(GOHOSTOS),linux darwin))
 	endif
 endif
 
-PREFIX                  ?= $(shell pwd)
+UNAME                   := $(shell uname | tr '[:upper:]' '[:lower:]')
+PREFIX                  ?= build/$(UNAME)
 BIN_DIR                 ?= $(shell pwd)
 DOCKER_IMAGE_TAG        ?= $(subst /,-,$(shell git rev-parse --abbrev-ref HEAD))
 DOCKERFILE_PATH         ?= ./Dockerfile

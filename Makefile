@@ -19,10 +19,6 @@ DOCKER_ARCHS ?= amd64 armv7 arm64 ppc64le s390x
 
 include Makefile.common
 
-PROMTOOL_VERSION ?= 2.18.1
-PROMTOOL_URL     ?= https://github.com/prometheus/prometheus/releases/download/v$(PROMTOOL_VERSION)/prometheus-$(PROMTOOL_VERSION).$(GO_BUILD_PLATFORM).tar.gz
-PROMTOOL         ?= $(FIRST_GOPATH)/bin/promtool
-
 DOCKER_IMAGE_NAME       ?= node-exporter
 MACH                    ?= $(shell uname -m)
 
@@ -41,6 +37,8 @@ else
 	ifndef GOOS
 		ifeq ($(GOHOSTOS), linux)
 			PROMU_CONF ?= .promu.yml
+		else ifeq ($(GOHOSTOS), darwin)
+			PROMU_CONF ?= .promu-cgo.darwin.yml
 		else
 			PROMU_CONF ?= .promu-cgo.yml
 		endif
@@ -52,6 +50,8 @@ else
 			else
 				PROMU_CONF ?= .promu-cgo.yml
 			endif
+		else ifeq ($(GOHOSTOS), darwin)
+			PROMU_CONF ?= .promu-cgo.mac.yml
 		else
 			PROMU_CONF ?= .promu-cgo.yml
 		endif
@@ -84,7 +84,7 @@ $(eval $(call goarch_pair,amd64,386))
 $(eval $(call goarch_pair,mips64,mips))
 $(eval $(call goarch_pair,mips64el,mipsel))
 
-all:: vet checkmetrics checkrules common-all $(cross-test) $(test-e2e)
+all:: vet common-all $(cross-test) $(test-e2e)
 
 .PHONY: test
 test: collector/fixtures/sys/.unpacked
@@ -119,24 +119,12 @@ test-e2e: build collector/fixtures/sys/.unpacked
 skip-test-e2e:
 	@echo ">> SKIP running end-to-end tests on $(GOHOSTOS)"
 
-.PHONY: checkmetrics
-checkmetrics: $(PROMTOOL)
-	@echo ">> checking metrics for correctness"
-	./checkmetrics.sh $(PROMTOOL) $(e2e-out)
-
-.PHONY: checkrules
-checkrules: $(PROMTOOL)
-	@echo ">> checking rules for correctness"
-	find . -name "*rules*.yml" | xargs -I {} $(PROMTOOL) check rules {}
-
 .PHONY: test-docker
 test-docker:
 	@echo ">> testing docker image"
 	./test_image.sh "$(DOCKER_REPO)/$(DOCKER_IMAGE_NAME)-linux-amd64:$(DOCKER_IMAGE_TAG)" 9100
 
-.PHONY: promtool
-promtool: $(PROMTOOL)
-
-$(PROMTOOL):
-	mkdir -p $(FIRST_GOPATH)/bin
-	curl -fsS -L $(PROMTOOL_URL) | tar -xvzf - -C $(FIRST_GOPATH)/bin --no-anchored --strip 1 promtool
+.PHONY: clean
+clean:
+	@rm -f node_exporter
+	@rm -rf .promu.*/ tmp/

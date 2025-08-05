@@ -68,7 +68,7 @@ PEF
 function test_environment {
     if [[ "$(echo "a" | sed 's/a/\x0/' | wc -c)" -ne 2 ]]; then
         echo "WARNING sed unable to handle null bytes, using Python (slow)."
-        if ! which python >/dev/null; then
+        if ! which python3 >/dev/null; then
             echo "ERROR Python not found. Aborting."
             exit 2
         fi
@@ -224,7 +224,7 @@ function extract {
             # Remove EOF unless preceeded by backslash
             # Remove one backslash in front of EOF
             if [ $USE_PYTHON -eq 1 ]; then
-                echo -n "$line" | python -c "$PYTHON_EXTRACT_FILTER" >> "$path"
+                echo -n "$line" | python3 -c "$PYTHON_EXTRACT_FILTER" >> "$path"
             else
                 # The repeated pattern makes up for sed's lack of negative
                 # lookbehind assertions (for consecutive null bytes).
@@ -334,7 +334,7 @@ function _create {
             # Add backslash in front of NULLBYTE
             # Replace null byte with NULLBYTE
             if [ $USE_PYTHON -eq 1 ]; then
-                < "$file" python -c "$PYTHON_CREATE_FILTER"
+                < "$file" python3 -c "$PYTHON_CREATE_FILTER"
             else
                 < "$file" \
                     sed 's/EOF/\\EOF/g;

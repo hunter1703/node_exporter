@@ -9,6 +9,7 @@ build:
     binaries:
         - name: node_exporter
     flags: -a -tags 'netgo osusergo static_build'
+    prefix: ./build/darwin
     ldflags: |
         -X github.com/prometheus/common/version.Version={{.Version}}
         -X github.com/prometheus/common/version.Revision={{.Revision}}
