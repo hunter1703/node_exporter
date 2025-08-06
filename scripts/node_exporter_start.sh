@@ -12,12 +12,15 @@ else
 fi
 
 LOG_DIR="${MONITORING_LOG_DIR:-$MONITORING_BASE_DIR/logs}"
-NODE_EXPORTER_DIR="$MONITORING_BASE_DIR/node_exporter"
 
 # Prepare log files
 mkdir -p "$LOG_DIR"
 touch "$LOG_DIR/node_exporter.out" "$LOG_DIR/node_exporter.err"
 
 # Launch
-"$NODE_EXPORTER_DIR/node_exporter" > "$LOG_DIR/node_exporter.out" 2> "$LOG_DIR/node_exporter.err"
-echo "✅ node_exporter started from $NODE_EXPORTER_DIR/node_exporter"
+nohup "$MONITORING_BASE_DIR/node_exporter" \
+  > "$LOG_DIR/node_exporter.out" \
+  2> "$LOG_DIR/node_exporter.err" \
+  < /dev/null &
+
+disown

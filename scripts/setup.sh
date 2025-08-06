@@ -126,7 +126,7 @@ fi
 
 # Only install Grafana via brew if on macOS and not already installed
 if [[ "$OS" == "darwin" ]]; then
-    if ! command -v grafana-server >/dev/null 2>&1; then
+    if ! command -v grafana >/dev/null 2>&1; then
         echo "📦 Installing Grafana using Homebrew..."
         if command -v brew >/dev/null 2>&1; then
             brew install grafana
@@ -137,6 +137,123 @@ if [[ "$OS" == "darwin" ]]; then
         fi
     else
         echo "ℹ️  Grafana already installed via Homebrew — skipping."
+    fi
+
+    GRAFANA_PREFIX=$(brew --prefix grafana 2>/dev/null)
+    DATASOURCE_PROV_DIR="$GRAFANA_PREFIX/share/grafana/conf/provisioning/datasources"
+    mkdir -p "$DATASOURCE_PROV_DIR"
+    cp "$SCRIPT_DIR/grafana_prometheus.yaml" "$DATASOURCE_PROV_DIR/"
+    echo "✅ Prometheus datasource provisioned"
+
+    DASHBOARD_PROV_DIR="$GRAFANA_PREFIX/share/grafana/conf/provisioning/dashboards"
+    DASHBOARD_DEST="$DASHBOARD_PROV_DIR/${OS}_dashboard.json"
+    DASHBOARD_YAML="$DASHBOARD_PROV_DIR/dashboard.yaml"
+    DASHBOARD_JSON_SRC="$SCRIPT_DIR/${OS}_dashboard.json"
+
+    if [ -f "$DASHBOARD_JSON_SRC" ]; then
+      mkdir -p "$DASHBOARD_PROV_DIR"
+      cp "$DASHBOARD_JSON_SRC" "$DASHBOARD_DEST"
+      cat > "$DASHBOARD_YAML" <<EOF
+apiVersion: 1
+
+providers:
+  - name: 'default'
+    folder: ''
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 10
+    options:
+      path: "$GRAFANA_PROV_DIR"
+EOF
+      echo "✅ Dashboard provisioned for $OS"
+    else
+      echo "⚠️ Dashboard file not found: $DASHBOARD_JSON_SRC"
+    fi
+
+    DEFAULTS_INI="$GRAFANA_PREFIX/share/grafana/conf/defaults.ini"
+    SECTION="[feature_toggles]"
+    KEYS=("provisioning = true" "kubernetesDashboards = true")
+
+    if [ ! -f "$DEFAULTS_INI" ]; then
+      echo "❌ defaults.ini not found at $DEFAULTS_INI"
+      exit 1
+    fi
+
+    # Track whether we need to create the section
+    SECTION_EXISTS=$(grep -Fx "$SECTION" "$DEFAULTS_INI")
+
+    if [ -z "$SECTION_EXISTS" ]; then
+      echo "🔧 Adding missing section $SECTION..."
+      {
+        echo
+        echo "$SECTION"
+        for key in "${KEYS[@]}"; do
+          echo "$key"
+        done
+      } >> "$DEFAULTS_INI"
+      echo "✅ Section $SECTION created with required keys."
+    else
+      echo "ℹ️  $SECTION already exists — checking for missing keys..."
+
+      TMP_FILE=$(mktemp)
+      in_section=0
+
+      while IFS= read -r line; do
+        echo "$line" >> "$TMP_FILE"
+
+        if [[ "$line" =~ ^\[.*\] ]]; then
+          if [[ "$line" == "$SECTION" ]]; then
+            in_section=1
+          else
+            in_section=0
+          fi
+          continue
+        fi
+
+        if [[ $in_section -eq 1 ]]; then
+          for i in "${!KEYS[@]}"; do
+            key_name="${KEYS[$i]%%=*}"
+            key_name=$(echo "$key_name" | xargs)  # trim whitespace
+            if [[ "$line" =~ ^$key_name[[:space:]]*= ]]; then
+              unset 'KEYS[i]'
+            fi
+          done
+        fi
+      done < "$DEFAULTS_INI"
+
+      # Append missing keys (if any) at end of section
+      if [[ ${#KEYS[@]} -gt 0 ]]; then
+        echo "🧩 Inserting missing keys into $SECTION..."
+        KEYS_FILE=$(mktemp)
+        for key in "${KEYS[@]}"; do
+          echo "$key"
+        done > "$KEYS_FILE"
+
+        awk -v section="$SECTION" -v keys_file="$KEYS_FILE" '
+          BEGIN {
+            added = 0
+            while ((getline k < keys_file) > 0) {
+              to_add[++n] = k
+            }
+            close(keys_file)
+          }
+          {
+            print $0
+            if ($0 == section && added == 0) {
+              for (i = 1; i <= n; i++) {
+                print to_add[i]
+              }
+              added = 1
+            }
+          }
+        ' "$TMP_FILE" > "${TMP_FILE}_final"
+
+        mv "${TMP_FILE}_final" "$DEFAULTS_INI"
+        rm -f "$TMP_FILE" "$KEYS_FILE"
+      fi
+
+      rm -f "$TMP_FILE"
+      echo "✅ $SECTION block is now up to date."
     fi
 else
   if [ -d "$base_dir/grafana" ]; then

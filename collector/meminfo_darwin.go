@@ -35,17 +35,6 @@ func (c *meminfoCollector) getMemInfo() (map[string]float64, error) {
 	host := C.mach_host_self()
 	infoCount := C.mach_msg_type_number_t(C.HOST_VM_INFO64_COUNT)
 	vmstat := C.vm_statistics64_data_t{}
-	var procInfo C.struct_proc_taskinfo
-	retInfo := C.proc_pidinfo(
-		C.int(20080),
-		C.PROC_PIDTASKINFO,
-		0,
-		unsafe.Pointer(&procInfo),
-		C.int(unsafe.Sizeof(procInfo)),
-	)
-	if retInfo <= 0 {
-		return nil, fmt.Errorf("proc_pidinfo failed for pid 20080")
-	}
 	ret := C.host_statistics64(
 		C.host_t(host),
 		C.HOST_VM_INFO64,

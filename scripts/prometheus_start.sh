@@ -33,9 +33,10 @@ mkdir -p "$LOG_DIR"
 touch "$LOG_DIR/prometheus.out" "$LOG_DIR/prometheus.err"
 
 # Launch Prometheus
-"$PROMETHEUS_BIN" \
+nohup "$PROMETHEUS_BIN" \
   --storage.tsdb.path="$PROMETHEUS_DATA" \
   --config.file="$PROMETHEUS_YML" \
-  > "$LOG_DIR/prometheus.out" 2> "$LOG_DIR/prometheus.err" &
+  > "$LOG_DIR/prometheus.out" 2> "$LOG_DIR/prometheus.err" \
+  < /dev/null &
 
-echo "✅ prometheus started from $PROMETHEUS_BIN"
+disown
