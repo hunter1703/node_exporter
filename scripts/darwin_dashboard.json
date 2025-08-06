@@ -287,6 +287,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 10,
             "gradientMode": "none",
@@ -317,7 +318,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": 0
               },
               {
                 "color": "red",
@@ -344,12 +346,13 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
       },
-      "pluginVersion": "8.1.2",
+      "pluginVersion": "12.1.0-pre",
       "repeat": "cpu_states",
       "repeatDirection": "h",
       "targets": [
@@ -470,12 +473,96 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "(sum(idelta(node_cpu_seconds_total{mode=~\"$cpu_states\", cpu=\"8\"}[1m]))/sum(idelta(node_cpu_seconds_total{cpu=\"8\"}[1m]))) * 100",
+          "expr": "(sum(idelta(node_cpu_seconds_total{mode=~\"$cpu_states\", cpu=\"9\"}[1m]))/sum(idelta(node_cpu_seconds_total{cpu=\"9\"}[1m]))) * 100",
           "hide": false,
           "interval": "",
           "legendFormat": "9",
           "range": true,
           "refId": "J"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus_ds"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "(sum(idelta(node_cpu_seconds_total{mode=~\"$cpu_states\", cpu=\"10\"}[1m]))/sum(idelta(node_cpu_seconds_total{cpu=\"10\"}[1m]))) * 100",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "10",
+          "range": true,
+          "refId": "K"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus_ds"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "(sum(idelta(node_cpu_seconds_total{mode=~\"$cpu_states\", cpu=\"11\"}[1m]))/sum(idelta(node_cpu_seconds_total{cpu=\"11\"}[1m]))) * 100",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "11",
+          "range": true,
+          "refId": "L"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus_ds"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "(sum(idelta(node_cpu_seconds_total{mode=~\"$cpu_states\", cpu=\"12\"}[1m]))/sum(idelta(node_cpu_seconds_total{cpu=\"12\"}[1m]))) * 100",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "12",
+          "range": true,
+          "refId": "M"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus_ds"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "(sum(idelta(node_cpu_seconds_total{mode=~\"$cpu_states\", cpu=\"13\"}[1m]))/sum(idelta(node_cpu_seconds_total{cpu=\"13\"}[1m]))) * 100",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "13",
+          "range": true,
+          "refId": "N"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus_ds"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "(sum(idelta(node_cpu_seconds_total{mode=~\"$cpu_states\", cpu=\"14\"}[1m]))/sum(idelta(node_cpu_seconds_total{cpu=\"14\"}[1m]))) * 100",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "14",
+          "range": true,
+          "refId": "O"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus_ds"
+          },
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "(sum(idelta(node_cpu_seconds_total{mode=~\"$cpu_states\", cpu=\"15\"}[1m]))/sum(idelta(node_cpu_seconds_total{cpu=\"15\"}[1m]))) * 100",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "15",
+          "range": true,
+          "refId": "P"
         }
       ],
       "title": "CPU ($cpu_states)",
@@ -1728,6 +1815,6 @@
   "timepicker": {},
   "timezone": "",
   "title": "Monitoring",
-  "uid": "monitoring",
+  "uid": "vXLXBC77z",
   "version": 2
 }
